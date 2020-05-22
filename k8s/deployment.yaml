@@ -32,6 +32,13 @@ spec:
       containers:
       - image: 10.9.3.74:5000/hello-nam:xxx
         name: hello-nam
+        resources:
+          requests:
+            memory: "64Mi"
+            cpu: "0.2"
+          limits:
+            memory: "128Mi"
+            cpu: "0.3"
         ports:
         - containerPort: 80
           name: hello-nam
