@@ -34,11 +34,8 @@ spec:
         name: hello-nam
         resources:
           requests:
-            memory: "64Mi"
             cpu: "0.2"
-          limits:
-            memory: "128Mi"
-            cpu: "0.3"
+            memory: "640Mi"
         ports:
         - containerPort: 80
           name: hello-nam
