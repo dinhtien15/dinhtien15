@@ -30,7 +30,7 @@ spec:
         tier: hello-nam
     spec:
       containers:
-      - image: 10.9.2.151:5000/hello-nam:xxx
+      - image: 10.9.3.74:5000/hello-nam:xxx
         name: hello-nam
         resources:
           requests:
