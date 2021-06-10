@@ -24,6 +24,9 @@ metadata:
 spec:
   strategy:
     type: Recreate
+  selector:
+    matchLabels:
+      app: hello-nam
   template:
     metadata:
       labels:
@@ -31,7 +34,7 @@ spec:
         tier: hello-nam
     spec:
       containers:
-      - image: 10.9.2.138/project/hello-nam:xxx
+      - image: 192.168.100.150:5000/hello-nam:xxx
         name: hello-nam
         resources:
           requests:
