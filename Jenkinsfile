@@ -20,5 +20,7 @@ node {
 
         sh "docker push ${imageName}"
 
-   
+   stage "Deploy"
+        sh "sed -i s/xxx/$tag/g k8s/deployment.yaml"
+	sh "kubectl ${env.token_kube} apply -f k8s/deployment.yaml"
 }
