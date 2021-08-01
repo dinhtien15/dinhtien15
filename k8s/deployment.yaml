@@ -18,24 +18,24 @@ spec:
 apiVersion: apps/v1
 kind: Deployment
 metadata:
-  name: hello-nam
+  name: website-demo
   labels:
-    app: hello-nam
+    app: website-demo
 spec:
   strategy:
     type: Recreate
   selector:
     matchLabels:
-      app: hello-nam
+      app: website-demo
   template:
     metadata:
       labels:
-        app: hello-nam
-        tier: hello-nam
+        app: website-demo
+        tier: website-demo
     spec:
       containers:
-      - image: 192.168.100.60:5000/hello-nam:xxx
-        name: hello-nam
+      - image: 192.168.19.5:5000/website-demo:xxx
+        name: website-demo
         resources:
           requests:
             memory: "64Mi"
@@ -43,6 +43,6 @@ spec:
             memory: "128Mi"
         ports:
         - containerPort: 80
-          name: hello-nam
+          name: website-demo
 
 
