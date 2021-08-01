@@ -1,16 +1,16 @@
 apiVersion: v1
 kind: Service
 metadata:
-  name: hello-nam
+  name: website-demo
   labels:
-    app: hello-nam
+    app: website-demo
 spec:
   ports:
     - port: 80
       targetPort: 80
   selector:
-    app: hello-nam
-    tier: hello-nam
+    app: website-demo
+    tier: website-demo
   type: NodePort
 
 ---
