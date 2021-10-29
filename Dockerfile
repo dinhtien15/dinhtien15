@@ -5,10 +5,6 @@ COPY DockerFileEx.jpg /usr/share/nginx/html/DockerFileEx.jpg
 RUN ["rm", "-f", "/etc/localtime"]
 RUN ["ln", "-s", "/usr/share/zoneinfo/Asia/Ho_Chi_Minh", "/etc/localtime"]
 RUN echo "nameserver 8.8.8.8" >> /etc/resolv.conf
-RUN curl -fsSLO https://get.docker.com/builds/Linux/x86_64/docker-17.04.0-ce.tgz \
-  && tar xzvf docker-17.04.0-ce.tgz \
-  && mv docker/docker /usr/local/bin \
-  && rm -r docker docker-17.04.0-ce.tgz
 
 EXPOSE 80
 
