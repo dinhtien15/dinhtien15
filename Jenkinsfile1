@@ -1,1 +1,10 @@
-hello 
+pipeline {
+    agent any
+    stage {
+        stage('build'){
+            steps{
+                bat 'whoami'
+            }
+        }
+    }
+}
