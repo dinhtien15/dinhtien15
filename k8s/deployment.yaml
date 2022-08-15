@@ -34,7 +34,7 @@ spec:
         tier: website-demo
     spec:
       containers:
-      - image: 10.9.1.104:5000/website-demo:xxx
+      - image: 10.9.1.134:5000/website-demo:xxx
         name: website-demo
         resources:
           requests:
