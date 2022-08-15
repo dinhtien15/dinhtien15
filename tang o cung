@@ -1,0 +1,87 @@
+
+**************MBR**************
+-------------Thêm dung lượng vào phân vùng bằng cách mở rộng dung lượng đĩa đã có---------------
+https://www.rootusers.com/how-to-increase-the-size-of-a-linux-lvm-by-expanding-the-virtual-machine-disk/
+
+------------------lệnh quét lại ổ--------------------
+lệnh quét lại ổ
+echo "1" > /sys/class/block/sda/device/rescan
+find /sys -iname 'scan'
+
+--------------Thêm dung lượng vào phân vùng bằng cách thêm một ổ mới--------------
+https://www.rootusers.com/how-to-increase-the-size-of-a-linux-lvm-by-adding-a-new-disk/
+
+
+**************GPT****************
+fdisk /dev/sda
+	p - xem phân vùng hiện tại
+		nếu fdisk -l không hiện phân vùng: 1,2,3,4 mà hiện là /dev/sda1 ==> parted /dev/sda --> p nếu có hỏi "fix" or "cancle" thì gõ --> "fix" enter --> "fix"
+
+	d - xóa phân vùng cần tăng dung lượng
+	chọn phân vùng cần tăng (vd: 4) sau đó enter
+	n - tạo phân vùng mới và enter cho đến khi phân vùng mới tạo xong
+	t - chuyển phân vùng vừa tạo về "Linux LVM" mã là: 8e
+	p - xem lại phân vùng vừa tạo
+	w - lưu lại những gì vừa thiết lập
+
+------Cập nhật lại bảng phân vùng ổ cứng --------------
+partx -u /dev/sda
+	nếu có lỗi hãy chạy: partprobe -s
+
+-------- thay dổi dung lượng logical volume---------
+pvresize /dev/sdax
+	trong đó x là phân vùng vừa được tạo
+
+--------xem tên của phân vùng cần được extend---------
+lvdisplay
+	cần xác định phân vùng sẽ tăng ổ cứng (ví dụ: /dev/centos/root)
+
+-----------tăng ổ cứng bằng phân vùng đã được tạo trên đầu-------
+lvextend -r /dev/centos/root /dev/sda4
+
+--------Kiểm tra lại kết quả ----------
+df -h
+
+--------Một số cách khắc phục lỗi khi resize GPT disk------------
+	"the next reboot or after you run partprobe(8) or kpartx(8) Syncing disks" ==> chạy lệnh: partprobe -s
+
+----------------link tham khảo-------------------
+https://serverfault.com/questions/861517/centos-7-extend-partition-with-unallocated-space
+
+
+chú ý: nếu đã cố gắng hết sức mà việc thay đổi dung lượng không thành công thì không được khởi động lại. phải tạo một máy ảo khác rồi di chuyển dữ liệu sang.
+
+
+lệnh trong Gparted:
+
+lvm pvck -v /dev/sda3
+
+grow file system to fill the partion
+lvm pvresize -v /dev/sda3
+
+
+chú ý: yếu làm đúng các bước mà không tăng được ổ cứng mà báo lỗi: 
+" WARNING: No free extents on physical volume "/dev/sda3".
+  No specified PVs have space available.
+"
+thì nguyên nhân có thể là do dung lượng trống của ổ không còn khả dụng để ghi bảng phân vùng. xóa filelog nào đấy đi rồi thử lvextend lại là okie.
+
+*****************Gộp ổ home vào ổ root*********************
+#trước hết check xem ổ home có dữ liệu gì không
+#check các phân vùng hiện có
+lsblk 
+
+#bỏ mount ổ home hiện tại
+umount /dev/mapper/centos-home
+
+#xóa lv home 
+lvremove /dev/mapper/centos-home
+#Tăng dung lượng cho root
+lvextend -l +100%FREE -r /dev/mapper/centos-root
+
+lsblk hoặc df -h để check lại phân vùng
+
+
+
+
+
