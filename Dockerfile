@@ -74,3 +74,11 @@ lvremove /dev/mapper/centos-home
 lvextend -l +100%FREE -r /dev/mapper/centos-root
 
 lsblk hoặc df -h để check lại phân vùng
+
+
+
+$ kubectl create serviceaccount cluster-admin-dashboard-sa
+kubectl create clusterrolebinding cluster-admin-dashboard-sa \
+  --clusterrole=cluster-admin \
+  --serviceaccount=default:cluster-admin-dashboard-sa
+
