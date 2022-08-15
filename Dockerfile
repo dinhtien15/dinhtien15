@@ -82,3 +82,5 @@ kubectl create clusterrolebinding cluster-admin-dashboard-sa \
   --clusterrole=cluster-admin \
   --serviceaccount=default:cluster-admin-dashboard-sa
 
+
+--insecure-skip-tls-verify --server=https://192.168.19.5:6443 --token=
