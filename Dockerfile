@@ -46,5 +46,17 @@ systemctl enable firewalld
 
 
 
+cat > /etc/docker/daemon.json <<EOF
+{
+  "exec-opts": ["native.cgroupdriver=systemd"],
+  "log-driver": "json-file",
+  "log-opts": {
+    "max-size": "100m"
+  },
+  "storage-driver": "overlay2",
+  "storage-opts": [
+    "overlay2.override_kernel_check=true"],"insecure-registries" : ["10.9.2.151:5000", "10.9.3.122:5000", "10.9.3.70:5000"]
+}
+EOF
 
 
