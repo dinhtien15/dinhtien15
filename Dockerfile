@@ -60,3 +60,17 @@ cat > /etc/docker/daemon.json <<EOF
 EOF
 
 
+*****************Gộp ổ home vào ổ root*********************
+#trước hết check xem ổ home có dữ liệu gì không
+#check các phân vùng hiện có
+lsblk 
+
+#bỏ mount ổ home hiện tại
+umount /dev/mapper/centos-home
+
+#xóa lv home 
+lvremove /dev/mapper/centos-home
+#Tăng dung lượng cho root
+lvextend -l +100%FREE -r /dev/mapper/centos-root
+
+lsblk hoặc df -h để check lại phân vùng
