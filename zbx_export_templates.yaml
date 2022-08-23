@@ -1,7 +1,7 @@
 zabbix_export:
-  version: '6.2'
-  date: '2022-08-19T08:41:53Z'
-  template_groups:
+  version: '6.0'
+  date: '2022-08-23T02:19:06Z'
+  groups:
     -
       uuid: 846977d1dfed4968bc5f8bdb363285bc
       name: 'Templates/Operating systems'
@@ -443,7 +443,7 @@ zabbix_export:
             -
               uuid: c5c52f75d4214a68b095e8bf55a6a934
               expression: 'fuzzytime(/Windows by Zabbix agent active/system.localtime,{$SYSTEM.FUZZYTIME.MAX})=0'
-              name: 'System time is out of sync'
+              name: 'System time is out of syn'
               event_name: 'System time is out of sync (diff with Zabbix server > {$SYSTEM.FUZZYTIME.MAX}s)'
               priority: WARNING
               description: 'The host system time is different from the Zabbix server time.'
@@ -654,39 +654,6 @@ zabbix_export:
             -
               tag: component
               value: cpu
-        -
-          uuid: 3c1068939adf4d998a942dcb6be23656
-          name: 'Active agent availability'
-          type: INTERNAL
-          key: 'zabbix[host,active_agent,available]'
-          history: 7d
-          description: |
-            Availability of active checks on the host. The value of this item corresponds to availability icons in the host list.
-            Possible value:
-            0 - unknown
-            1 - available
-            2 - not available
-          valuemap:
-            name: zabbix.host.active_agent.available
-          tags:
-            -
-              tag: component
-              value: health
-            -
-              tag: component
-              value: network
-          triggers:
-            -
-              uuid: ce4a95a80cc54353ab0e0d2ae6312930
-              expression: 'min(/Windows by Zabbix agent active/zabbix[host,active_agent,available],{$AGENT.TIMEOUT})=2'
-              name: 'Zabbix agent: active checks are not available'
-              opdata: 'Current state: {ITEM.LASTVALUE1}'
-              priority: HIGH
-              description: 'Active checks are considered unavailable. Agent is not sending heartbeat for prolonged time.'
-              tags:
-                -
-                  tag: scope
-                  value: availability
       discovery_rules:
         -
           uuid: c05c8d1be5614ffab1688cc92db32f12
@@ -1405,7 +1372,6 @@ zabbix_export:
           type: ZABBIX_ACTIVE
           key: service.discovery
           delay: 1h
-          status: DISABLED
           filter:
             evaltype: AND
             conditions:
@@ -1435,6 +1401,7 @@ zabbix_export:
               type: ZABBIX_ACTIVE
               key: 'service.info["{#SERVICE.NAME}",state]'
               history: 7d
+              status: DISABLED
               valuemap:
                 name: 'Windows service state'
               tags:
@@ -1453,6 +1420,8 @@ zabbix_export:
                   expression: 'min(/Windows by Zabbix agent active/service.info["{#SERVICE.NAME}",state],#3)<>0'
                   name: '"{#SERVICE.NAME}" ({#SERVICE.DISPLAYNAME}) is not running'
                   event_name: '"{#SERVICE.NAME}" ({#SERVICE.DISPLAYNAME}) is not running (startup type {#SERVICE.STARTUPNAME})'
+                  status: DISABLED
+                  discover: NO_DISCOVER
                   priority: AVERAGE
                   description: 'The service has a state other than "Running" for the last three times.'
                   tags:
@@ -1624,10 +1593,6 @@ zabbix_export:
           value: 30m
           description: 'No data timeout for active agents. Consider to keep it relatively high.'
         -
-          macro: '{$AGENT.TIMEOUT}'
-          value: 5m
-          description: 'Timeout after which agent is considered unavailable.'
-        -
           macro: '{$CPU.INTERRUPT.CRIT.MAX}'
           value: '50'
           description: 'The critical threshold of the % Interrupt Time counter.'
@@ -1662,7 +1627,7 @@ zabbix_export:
           description: 'The warning threshold of the Free System Page Table Entries counter.'
         -
           macro: '{$MEMORY.UTIL.MAX}'
-          value: '90'
+          value: '95'
           description: 'The warning threshold of the Memory util item.'
         -
           macro: '{$NET.IF.IFALIAS.MATCHES}'
@@ -1688,22 +1653,6 @@ zabbix_export:
           macro: '{$NET.IF.IFNAME.NOT_MATCHES}'
           value: Miniport|Virtual|Teredo|Kernel|Loopback|Bluetooth|HTTPS|6to4|QoS|Layer
           description: 'This macro is used in Network interface discovery. Can be overridden on the host or linked template level.'
-        -
-          macro: '{$SERVICE.NAME.MATCHES}'
-          value: '^.*$'
-          description: 'This macro is used in Service discovery. Can be overridden on the host or linked template level.'
-        -
-          macro: '{$SERVICE.NAME.NOT_MATCHES}'
-          value: '^(?:RemoteRegistry|MMCSS|gupdate|SysmonLog|clr_optimization_v.+|sppsvc|gpsvc|Pml Driver HPZ12|Net Driver HPZ12|MapsBroker|IntelAudioService|Intel\(R\) TPM Provisioning Service|dbupdate|DoSvc|CDPUserSvc_.+|WpnUserService_.+|OneSyncSvc_.+|WbioSrvc|BITS|tiledatamodelsvc|GISvc|ShellHWDetection|TrustedInstaller|TabletInputService|CDPSvc|wuauserv)$'
-          description: 'This macro is used in Service discovery. Can be overridden on the host or linked template level.'
-        -
-          macro: '{$SERVICE.STARTUPNAME.MATCHES}'
-          value: '^(?:automatic|automatic delayed)$'
-          description: 'This macro is used in Service discovery. Can be overridden on the host or linked template level.'
-        -
-          macro: '{$SERVICE.STARTUPNAME.NOT_MATCHES}'
-          value: '^(?:manual|disabled)$'
-          description: 'This macro is used in Service discovery. Can be overridden on the host or linked template level.'
         -
           macro: '{$SWAP.PFREE.MIN.WARN}'
           value: '20'
@@ -2089,19 +2038,6 @@ zabbix_export:
             -
               value: '255'
               newvalue: 'No such service'
-        -
-          uuid: 6e7949c77d3442849778ff80271211df
-          name: zabbix.host.active_agent.available
-          mappings:
-            -
-              value: '0'
-              newvalue: unknown
-            -
-              value: '1'
-              newvalue: available
-            -
-              value: '2'
-              newvalue: 'not available'
         -
           uuid: 9c0c0eb0ed7e495b9d4d487df7af0acd
           name: zabbix.host.available
